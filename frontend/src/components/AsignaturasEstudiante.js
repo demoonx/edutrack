@@ -12,7 +12,7 @@ function AsignaturasEstudiante({ onVolver }) {
 
   useEffect(() => {
     if (materiaSeleccionada) {
-      axios.get('http://localhost:5000/api/questions')
+      axios.get('http://192.168.1.102:5000/api/questions')
         .then(res => {
           const filtradas = res.data.filter(q => q.subject === materiaSeleccionada);
           setPreguntas(filtradas);

@@ -14,7 +14,7 @@ function CreateQuestion() {
       return;
     }
 
-    await axios.post('http://localhost:5000/api/questions', {
+    await axios.post('http://192.168.1.102:5000/api/questions', {
       subject,
       question,
       options,

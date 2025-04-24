@@ -63,6 +63,12 @@ function QuestionListEditable({ subject, onVolver }) {
     }
   };
 
+  const handleAddOption = () => {
+    if (editOptions.length < 10) {
+      setEditOptions([...editOptions, '']);
+    }
+  };
+
   return (
     <div>
       <h3>Preguntas de {subject}</h3>
@@ -131,6 +137,12 @@ function QuestionListEditable({ subject, onVolver }) {
                     </div>
                   </div>
                 ))}
+
+                {editOptions.length < 10 && (
+                  <button className="button-principal" onClick={handleAddOption}>
+                    ➕ Agregar alternativa
+                  </button>
+                )}
 
                 <button className="button-principal" onClick={handleSave}>💾 Guardar</button>
                 <button className="button-grey" onClick={() => setEditingId(null)}>Cancelar</button>
