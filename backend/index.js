@@ -13,12 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 // Conexión MongoDB
-mongoose.connect('mongodb://localhost:27017/edutrack', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ Conectado a MongoDB'))
-.catch((err) => console.error('❌ Error al conectar MongoDB:', err));
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log('✅ Conectado a MongoDB Atlas'))
+  .catch((err) => console.error('❌ Error al conectar MongoDB:', err));
 
 // Conexión Redis
 const redis = new Redis(process.env.REDIS_URL, {
