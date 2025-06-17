@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const redis = require('ioredis');
 
-mongoose.connect('mongodb://192.168.1.102:27017/edutrack');
+mongoose.connect('mongodb://192.168.1.101:27017/edutrack');
 
 const redisClient = new redis(); // por defecto localhost:6379
 

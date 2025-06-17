@@ -46,4 +46,12 @@ router.get('/puntaje/:email', async (req, res) => {
   }
 });
 
+router.get('/:email', async (req, res) => {
+  const { email } = req.params;
+  const student = await Student.findOne({ email });
+  if (!student) return res.status(404).json({ error: 'No encontrado' });
+  res.json(student);
+});
+
+
 module.exports = router;

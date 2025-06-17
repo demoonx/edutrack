@@ -36,5 +36,5 @@ app.use('/api/students', studentRoutes);
 
 // Inicio del servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en http://192.168.1.102:${PORT}`);
+  console.log(`🚀 Servidor escuchando en http://192.168.1.101:${PORT}`);
 });

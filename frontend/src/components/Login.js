@@ -13,7 +13,7 @@ function Login({ onLogin }) {
     }
 
     try {
-      const res = await axios.post('http://192.168.1.102:5000/api/auth/login', {
+      const res = await axios.post('http://localhost:5000/api/auth/login', {
         email,
         role
       });
