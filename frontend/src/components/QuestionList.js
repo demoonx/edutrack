@@ -6,7 +6,7 @@ function QuestionList({ subject }) {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    axios.get('http://192.168.1.102:5000/api/questions')
+    axios.get('${process.env.REACT_APP_API_URL}/api/questions')
       .then(res => {
         const filtradas = res.data.filter(q => q.subject === subject);
         setQuestions(filtradas);

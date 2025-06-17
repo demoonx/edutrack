@@ -14,7 +14,7 @@ function CreateQuestion() {
       return;
     }
 
-    await axios.post('http://192.168.1.102:5000/api/questions', {
+    await axios.post('${process.env.REACT_APP_API_URL}/api/questions', {
       subject,
       question,
       options,

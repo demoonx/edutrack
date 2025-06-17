@@ -14,7 +14,7 @@ function QuizRapido({ onVolver }) {
 
   const iniciarQuiz = () => {
     if (materiaSeleccionada) {
-      axios.get('http://192.168.1.102:5000/api/questions')
+      axios.get('${process.env.REACT_APP_API_URL}/api/questions')
         .then(res => {
           const filtradas = res.data.filter(q => q.subject === materiaSeleccionada);
           const seleccionadas = filtradas.sort(() => 0.5 - Math.random()).slice(0, 5);

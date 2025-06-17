@@ -12,7 +12,7 @@ function QuestionListEditable({ subject, onVolver }) {
   const [editAnswer, setEditAnswer] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/questions')
+    axios.get('${process.env.REACT_APP_API_URL}/api/questions')
       .then(res => {
         const filtradas = res.data.filter(q => q.subject === subject);
         setQuestions(filtradas);
@@ -21,7 +21,7 @@ function QuestionListEditable({ subject, onVolver }) {
 
   const handleDelete = async (id) => {
     if (!window.confirm('¿Estás seguro que deseas eliminar esta pregunta?')) return;
-    await axios.delete(`http://localhost:5000/api/questions/${id}`);
+    await axios.delete(`${process.env.REACT_APP_API_URL}/api/questions/${id}`);
     setQuestions(prev => prev.filter(q => q._id !== id));
   };
 
@@ -33,7 +33,7 @@ function QuestionListEditable({ subject, onVolver }) {
   };
 
   const handleSave = async () => {
-    await axios.put(`http://localhost:5000/api/questions/${editingId}`, {
+    await axios.put(`${process.env.REACT_APP_API_URL}/api/questions/${editingId}`, {
       question: editText,
       options: editOptions,
       answer: editOptions[editAnswer]

@@ -21,7 +21,11 @@ mongoose.connect('mongodb://localhost:27017/edutrack', {
 .catch((err) => console.error('❌ Error al conectar MongoDB:', err));
 
 // Conexión Redis
-const redis = new Redis();
+const redis = new Redis(process.env.REDIS_URL, {
+  tls: {
+    rejectUnauthorized: false // necesario si usas `rediss://` en Render o Upstash
+  }
+});
 redis.on('connect', () => console.log('✅ Conectado a Redis'));
 redis.on('error', err => console.error('❌ Error de Redis:', err));
 
