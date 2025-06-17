@@ -1,37 +1,44 @@
-
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('../models/User');
-const Student = require('../models/Student');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User"); // Ajusta según tu ruta real
 
-// POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, role } = req.body;
-
-    if (!email || !role) {
-      return res.status(400).json({ error: 'Email y rol son obligatorios' });
-    }
-
     let user = await User.findOne({ email });
 
     if (!user) {
-      user = new User({ email, role });
-    } else {
-      user.role = role; // 👈 actualiza el rol si ya existe
+      // Si el usuario no existe, lo creamos automáticamente
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      user = new User({
+        email,
+        password: hashedPassword,
+        role: "student" // o cualquier rol por defecto
+      });
+
+      await user.save();
+      console.log("👤 Usuario registrado automáticamente");
     }
 
-    await user.save();
+    // Comparamos la contraseña
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Contraseña inválida" });
+    }
 
-    res.json({
-      email: user.email,
-      role: user.role,
-      nombre: user.nombre || '',
-      puntajes: user.puntajes
+    // Generamos token
+    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: "2h"
     });
-  } catch (err) {
-    console.error('Error en login:', err);
-    res.status(500).json({ error: 'Error en login' });
+
+    res.json({ token, user: { id: user._id, email: user.email, role: user.role } });
+  } catch (error) {
+    console.error("❌ Error en login automático:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 });
 
