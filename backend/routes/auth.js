@@ -1,44 +1,46 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User"); // Ajusta según tu ruta real
+const User = require("../models/User");
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { nombre, rol } = req.body;
 
   try {
-    let user = await User.findOne({ email });
+    const normalizedEmail = nombre.trim().toLowerCase() + "@edutrack.com";
+
+    let user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
-      // Si el usuario no existe, lo creamos automáticamente
-      const hashedPassword = await bcrypt.hash(password, 10);
-
       user = new User({
-        email,
-        password: hashedPassword,
-        role: "student" // o cualquier rol por defecto
+        email: normalizedEmail,
+        nombre: nombre.trim(),
+        role: rol === "profesor" ? "profesor" : "estudiante"
       });
 
       await user.save();
-      console.log("👤 Usuario registrado automáticamente");
+      console.log(`✅ Usuario creado automáticamente: ${nombre} como ${rol}`);
     }
 
-    // Comparamos la contraseña
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Contraseña inválida" });
-    }
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
 
-    // Generamos token
-    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "2h"
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        nombre: user.nombre,
+        email: user.email,
+        role: user.role,
+        puntajes: user.puntajes
+      }
     });
-
-    res.json({ token, user: { id: user._id, email: user.email, role: user.role } });
-  } catch (error) {
-    console.error("❌ Error en login automático:", error);
-    res.status(500).json({ message: "Error interno del servidor" });
+  } catch (err) {
+    console.error("❌ Error en login automático:", err);
+    res.status(500).json({ message: "Error en el servidor" });
   }
 });
 
