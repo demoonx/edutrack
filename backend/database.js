@@ -1,10 +1,19 @@
 const mongoose = require('mongoose');
-const redis = require('ioredis');
+const Redis = require('ioredis');
 
-mongoose.connect('mongodb://192.168.1.101:27017/edutrack');
+// 🔗 Conexión MongoDB (desde variable de entorno)
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log('✅ Conectado a MongoDB Atlas'))
+  .catch(err => console.error('❌ Error al conectar MongoDB:', err));
 
-const redisClient = new redis(); // por defecto localhost:6379
+// 🔗 Conexión Redis (desde variable de entorno)
+const redisClient = new Redis(process.env.REDIS_URL, {
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+
+redisClient.on('connect', () => console.log('✅ Conectado a Redis'));
+redisClient.on('error', err => console.error('❌ Error de Redis:', err));
 
 module.exports = { mongoose, redisClient };
-// Este archivo establece la conexión a la base de datos MongoDB y a Redis.
-// Puedes ajustar la configuración de conexión según sea necesario.

@@ -1,9 +1,8 @@
-
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
-const Redis = require('ioredis');
 require('dotenv').config();
+
+const { mongoose, redisClient } = require('./database'); // Conexión centralizada
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,20 +10,6 @@ const PORT = process.env.PORT || 5000;
 // Middlewares
 app.use(cors());
 app.use(express.json());
-
-// Conexión MongoDB
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log('✅ Conectado a MongoDB Atlas'))
-  .catch((err) => console.error('❌ Error al conectar MongoDB:', err));
-
-// Conexión Redis
-const redis = new Redis(process.env.REDIS_URL, {
-  tls: {
-    rejectUnauthorized: false // necesario si usas `rediss://` en Render o Upstash
-  }
-});
-redis.on('connect', () => console.log('✅ Conectado a Redis'));
-redis.on('error', err => console.error('❌ Error de Redis:', err));
 
 // Rutas
 const authRoutes = require('./routes/auth');
@@ -37,5 +22,5 @@ app.use('/api/students', studentRoutes);
 
 // Inicio del servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en http://192.168.1.101:${PORT}`);
+  console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);
 });
