@@ -11,14 +11,26 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<Login onLogin={login} />} />
+      <Route path="/" element={<Login />} />
       <Route
         path="/panelprofesor"
-        element={<PanelProfesor onCerrarSesion={logout} />}
+        element={
+          usuario?.role === 'profesor' ? (
+            <PanelProfesor onCerrarSesion={logout} />
+          ) : (
+            <Login />
+          )
+        }
       />
       <Route
         path="/panelestudiante"
-        element={<PanelEstudiante onCerrarSesion={logout} />}
+        element={
+          usuario?.role === 'estudiante' ? (
+            <PanelEstudiante onCerrarSesion={logout} />
+          ) : (
+            <Login />
+          )
+        }
       />
     </Routes>
   );
