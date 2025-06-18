@@ -1,10 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { sumarPuntaje } from '../puntajeUtils';
 
-function ResolverPregunta({ pregunta, onVolver, onSiguiente }) {
-  const { usuario } = useAuth();
+function ResolverPregunta({ pregunta, onSiguiente }) {
   const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
   const [resultado, setResultado] = useState(null);
 
@@ -13,16 +9,13 @@ function ResolverPregunta({ pregunta, onVolver, onSiguiente }) {
     setResultado(null);
   }, [pregunta]);
 
-  const handleSeleccion = async (opcion) => {
+  const handleSeleccion = (opcion) => {
     setRespuestaSeleccionada(opcion);
     const esCorrecta = opcion === pregunta.answer;
     setResultado(esCorrecta ? 'correcta' : 'incorrecta');
-
-    if (esCorrecta && usuario?.email && pregunta?.subject) {
-        console.log('Sumando puntaje para:', usuario.email, 'materia:', pregunta.subject);
-        await sumarPuntaje(usuario.email, pregunta.subject, 1);
-      }
   };
+
+  if (!pregunta) return <p>No hay pregunta para mostrar.</p>;
 
   return (
     <div className="container">
@@ -52,11 +45,9 @@ function ResolverPregunta({ pregunta, onVolver, onSiguiente }) {
           <p style={{ fontWeight: 'bold', color: resultado === 'correcta' ? 'green' : 'red' }}>
             {resultado === 'correcta' ? '✅ Respuesta correcta' : '❌ Respuesta incorrecta'}
           </p>
-          {onSiguiente ? (
-            <button className="button-principal" onClick={onSiguiente}>➡️ Siguiente pregunta</button>
-          ) : (
-            <button className="button-grey" onClick={onVolver}>🔙 Volver a preguntas</button>
-          )}
+          <button className="button-principal" onClick={onSiguiente}>
+            ➡️ Siguiente pregunta
+          </button>
         </>
       )}
     </div>

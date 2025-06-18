@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import ResolverPregunta from './ResolverPregunta';
 import { useAuth } from '../context/AuthContext';
@@ -13,17 +13,19 @@ function QuizRapido({ onVolver }) {
 
   const materias = ["Biología", "Historia", "Matemáticas", "Física", "Lenguaje", "Inglés"];
 
-  const iniciarQuiz = () => {
-    if (materiaSeleccionada) {
-      axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/questions`)
-        .then(res => {
-          const filtradas = res.data.filter(q => q.subject === materiaSeleccionada);
-          const seleccionadas = filtradas.sort(() => 0.5 - Math.random()).slice(0, 5);
-          setPreguntas(seleccionadas);
-          setPreguntaActual(seleccionadas[0]);
-          setIndice(0);
-          setMostrarResultado(false);
-        });
+  const iniciarQuiz = async (materia) => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/questions`);
+      const filtradas = res.data.filter(q => q.subject === materia);
+      const seleccionadas = filtradas.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+      setMateriaSeleccionada(materia);
+      setPreguntas(seleccionadas);
+      setPreguntaActual(seleccionadas[0]);
+      setIndice(0);
+      setMostrarResultado(false);
+    } catch (err) {
+      console.error("❌ Error al cargar preguntas:", err);
     }
   };
 
@@ -54,7 +56,7 @@ function QuizRapido({ onVolver }) {
         <>
           <h3>Selecciona una asignatura para el quiz</h3>
           {materias.map((m, i) => (
-            <button key={i} className="button-principal" onClick={() => setMateriaSeleccionada(m)}>
+            <button key={i} className="button-principal" onClick={() => iniciarQuiz(m)}>
               {m}
             </button>
           ))}
@@ -65,11 +67,13 @@ function QuizRapido({ onVolver }) {
           <h3>¡Quiz finalizado!</h3>
           <button onClick={onVolver}>⬅ Volver</button>
         </>
-      ) : (
+      ) : preguntaActual ? (
         <ResolverPregunta
           pregunta={preguntaActual}
-          onResponder={manejarRespuesta}
+          onSiguiente={avanzar}
         />
+      ) : (
+        <p>Cargando pregunta...</p>
       )}
     </div>
   );
