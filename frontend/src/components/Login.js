@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const [nombre, setNombre] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (rol) => {
     if (!nombre) {
@@ -18,41 +20,21 @@ function Login() {
         nombre,
         rol
       });
+
       console.log("🧪 Respuesta del backend:", res.data);
 
       if (res.data?.user) {
-        onLogin(res.data.user);
+        login(res.data.user); // guarda el usuario en contexto
+        navigate(`/${rol === 'estudiante' ? 'panelestudiante' : 'panelprofesor'}`);
       } else {
-        console.warn("⚠️ Respuesta inesperada:", res.data);
         setError('Credenciales inválidas');
       }
     } catch (err) {
       console.error('❌ Error en login:', err);
       setError('No se pudo iniciar sesión');
     }
-  }
-    /*try {
-      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
-        nombre,
-        rol
-      });
-
-      if (res.data && res.data.user) {
-        // Navegación según el rol
-        if (res.data.user.role === 'estudiante') {
-          navigate('/panelestudiante');
-        } else {
-          navigate('/panelprofesor');
-        }
-      } else {
-        setError('Credenciales inválidas');
-      }
-    } catch (err) {
-      console.error('Error en login:', err);
-      setError('No se pudo iniciar sesión');
-    }
   };
-*/
+
   return (
     <>
       <img src="/edutrack-logo.png" alt="EduTrack" className="logo" />
