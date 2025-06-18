@@ -1,21 +1,20 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
 
 function Login({ onLogin }) {
-  const [email, setEmail] = useState('');
+  const [nombre, setNombre] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = async (role) => {
-    if (!email) {
-      setError('Ingresa tu correo.');
+  const handleLogin = async (rol) => {
+    if (!nombre) {
+      setError('Ingresa tu nombre.');
       return;
     }
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/questions`, {
-        email,
-        role
+      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
+        nombre,
+        rol
       });
 
       if (res.data && res.data.user) {
@@ -35,21 +34,20 @@ function Login({ onLogin }) {
       <h2>Accede a tu cuenta</h2>
 
       <input
-        type="email"
-        placeholder="Ingresa tu correo"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        type="text"
+        placeholder="Ingresa tu nombre"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
       />
 
       <button className="button-principal" onClick={() => handleLogin('estudiante')}>
-        👨‍🎓 Entrar como estudiante
+        Ingresar como Estudiante
+      </button>
+      <button className="button-principal" onClick={() => handleLogin('profesor')}>
+        Ingresar como Profesor
       </button>
 
-      <button className="button-grey" onClick={() => handleLogin('profesor')}>
-        👨‍🏫 Entrar como profesor
-      </button>
-
-      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
     </>
   );
 }
