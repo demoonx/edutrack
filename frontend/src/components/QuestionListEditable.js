@@ -12,7 +12,7 @@ function QuestionListEditable({ subject, onVolver }) {
   const [editAnswer, setEditAnswer] = useState(null);
 
   useEffect(() => {
-    axios.get('${process.env.REACT_APP_API_URL}/api/questions')
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/questions`)
       .then(res => {
         const filtradas = res.data.filter(q => q.subject === subject);
         setQuestions(filtradas);

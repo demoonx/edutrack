@@ -13,7 +13,7 @@ function Login({ onLogin }) {
     }
 
     try {
-      const res = await axios.post('${process.env.REACT_APP_API_URL}/api/auth/login', {
+      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/questions`, {
         email,
         role
       });

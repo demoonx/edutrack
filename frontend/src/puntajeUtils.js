@@ -3,7 +3,7 @@ import axios from 'axios';
 export async function sumarPuntaje(email, materia, puntos = 1) {
   try {
     console.log('📤 Enviando puntaje...', { email, materia, puntos });
-    const res = await axios.post('http://192.168.1.102:5000/api/students/puntaje', {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/questions`, {
       email,
       materia,
       puntos
