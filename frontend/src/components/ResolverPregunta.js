@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function ResolverPregunta({ pregunta, onResponder }) {
+function ResolverPregunta({ pregunta, onResponder, onVolver }) {
   const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
   const [resultado, setResultado] = useState(null);
 
@@ -14,7 +14,6 @@ function ResolverPregunta({ pregunta, onResponder }) {
     const esCorrecta = opcion === pregunta.answer;
     setResultado(esCorrecta ? 'correcta' : 'incorrecta');
 
-    // ✅ Notificar al componente padre si fue correcta
     if (onResponder) {
       onResponder(esCorrecta);
     }
@@ -23,7 +22,7 @@ function ResolverPregunta({ pregunta, onResponder }) {
   if (!pregunta) return <p>No hay pregunta para mostrar.</p>;
 
   return (
-    <div className="container">
+    <>
       <h3>{pregunta.question}</h3>
       <ul style={{ listStyle: 'none', padding: 0 }}>
         {pregunta.options.map((op, idx) => (
@@ -50,9 +49,14 @@ function ResolverPregunta({ pregunta, onResponder }) {
           <p style={{ fontWeight: 'bold', color: resultado === 'correcta' ? 'green' : 'red' }}>
             {resultado === 'correcta' ? '✅ Respuesta correcta' : '❌ Respuesta incorrecta'}
           </p>
+          {onVolver && (
+            <button className="button-grey" onClick={onVolver} style={{ marginTop: '10px' }}>
+              🔙 Volver a preguntas
+            </button>
+          )}
         </>
       )}
-    </div>
+    </>
   );
 }
 
