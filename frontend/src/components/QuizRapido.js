@@ -70,7 +70,7 @@ function QuizRapido({ onVolver }) {
       ) : preguntaActual ? (
         <ResolverPregunta
           pregunta={preguntaActual}
-          onSiguiente={avanzar}
+          onResponder={manejarRespuesta}
         />
       ) : (
         <p>Cargando pregunta...</p>
