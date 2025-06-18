@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const studentRoutes = require('./controllers/studentController');
+const studentScoreRoutes = require('./controllers/studentController');
 require('dotenv').config();
 
 const { mongoose, redisClient } = require('./database'); // Conexión centralizada
@@ -15,11 +15,11 @@ app.use(express.json());
 // Rutas
 const authRoutes = require('./routes/auth');
 const questionRoutes = require('./routes/questions');
-const studentRoutes = require('./routes/students');
+const studentRoutesLegacy = require('./routes/students');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/questions', questionRoutes);
-app.use('/api/students', studentRoutes);
+app.use('/api/students', studentScoreRoutes);
 
 // Inicio del servidor
 app.listen(PORT, () => {
