@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function Login({ onLogin }) {
+function Login() {
   const [nombre, setNombre] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = async (rol) => {
     if (!nombre) {
@@ -18,7 +19,12 @@ function Login({ onLogin }) {
       });
 
       if (res.data && res.data.user) {
-        onLogin(res.data.user);
+        // Navegación según el rol
+        if (res.data.user.role === 'estudiante') {
+          navigate('/panelestudiante');
+        } else {
+          navigate('/panelprofesor');
+        }
       } else {
         setError('Credenciales inválidas');
       }
