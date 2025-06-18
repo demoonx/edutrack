@@ -39,17 +39,8 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <div
-        className="App"
-        style={{
-          background: "url('/fondo.png') center center / cover no-repeat fixed",
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <div className="container">
+      <div className="App">
+        <div className="page-wrapper">
           <AppRoutes />
         </div>
       </div>

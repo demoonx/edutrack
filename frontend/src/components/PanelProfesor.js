@@ -8,7 +8,7 @@ function PanelProfesor({ onCerrarSesion }) {
   const [materiaSeleccionada, setMateriaSeleccionada] = useState('');
 
   return (
-    <div className="container">
+    <>
       <img src="/edutrack-logo.png" alt="EduTrack" className="logo" />
       <h2>🎓 Panel del Profesor</h2>
       {!vista && (
@@ -47,7 +47,7 @@ function PanelProfesor({ onCerrarSesion }) {
           <button className="button-grey" onClick={() => setVista(null)}>🔙 Volver</button>
         </>
       )}
-    </div>
+    </>
   );
 }
 

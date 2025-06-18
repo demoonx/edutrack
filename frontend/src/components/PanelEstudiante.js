@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AsignaturasEstudiante from './AsignaturasEstudiante';
 import QuizRapido from './QuizRapido';
@@ -8,7 +7,7 @@ function PanelEstudiante({ onCerrarSesion }) {
   const [vista, setVista] = useState(null);
 
   return (
-    <div className="container">
+    <>
       <img src="/edutrack-logo.png" alt="EduTrack" className="logo" />
       <h2>👨‍🎓 Panel del Estudiante</h2>
 
@@ -32,7 +31,7 @@ function PanelEstudiante({ onCerrarSesion }) {
       {vista === 'asignaturas' && <AsignaturasEstudiante onVolver={() => setVista(null)} />}
       {vista === 'quiz' && <QuizRapido onVolver={() => setVista(null)} />}
       {vista === 'perfil' && <PerfilAlumno onVolver={() => setVista(null)} />}
-    </div>
+    </>
   );
 }
 
