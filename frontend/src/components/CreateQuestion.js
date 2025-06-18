@@ -14,16 +14,16 @@ function CreateQuestion() {
       return;
     }
 
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/questions`), {
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/questions`, {
       subject,
       question,
       options,
       answer: options[answer]
-    };
+    });
 
     alert('Pregunta creada con éxito.');
-    // Mantener campos si se desea
   };
+
 
   const handleAddOption = () => {
     if (options.length < 10) {
