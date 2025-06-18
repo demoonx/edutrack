@@ -18,8 +18,8 @@ function Login({ onLogin }) {
         role
       });
 
-      if (res.data && res.data.email) {
-        onLogin(res.data);
+      if (res.data && res.data.user) {
+        onLogin(res.data.user);
       } else {
         setError('Credenciales inválidas');
       }
