@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const studentRoutes = require('./controllers/studentController');
 require('dotenv').config();
 
 const { mongoose, redisClient } = require('./database'); // Conexión centralizada

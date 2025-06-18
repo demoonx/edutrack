@@ -1,7 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ResolverPregunta from './ResolverPregunta';
+import { useAuth } from '../context/AuthContext';
 
 function QuizRapido({ onVolver }) {
   const [materiaSeleccionada, setMateriaSeleccionada] = useState('');
@@ -9,6 +9,7 @@ function QuizRapido({ onVolver }) {
   const [preguntaActual, setPreguntaActual] = useState(null);
   const [indice, setIndice] = useState(0);
   const [mostrarResultado, setMostrarResultado] = useState(false);
+  const { usuario } = useAuth();
 
   const materias = ["Biología", "Historia", "Matemáticas", "Física", "Lenguaje", "Inglés"];
 
@@ -21,8 +22,20 @@ function QuizRapido({ onVolver }) {
           setPreguntas(seleccionadas);
           setPreguntaActual(seleccionadas[0]);
           setIndice(0);
+          setMostrarResultado(false);
         });
     }
+  };
+
+  const manejarRespuesta = async (correcta) => {
+    if (correcta && usuario) {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/students/add-score`, {
+        userId: usuario.id,
+        materia: materiaSeleccionada,
+        puntos: 1
+      });
+    }
+    avanzar();
   };
 
   const avanzar = () => {
@@ -45,28 +58,18 @@ function QuizRapido({ onVolver }) {
               {m}
             </button>
           ))}
-          <button className="button-grey" onClick={onVolver}>🔙 Volver</button>
-        </>
-      ) : preguntas.length === 0 ? (
-        <>
-          <button className="button-principal" onClick={iniciarQuiz}>Iniciar Quiz</button>
-          <button className="button-grey" onClick={() => setMateriaSeleccionada('')}>🔙 Volver</button>
+          <button onClick={onVolver}>⬅ Volver</button>
         </>
       ) : mostrarResultado ? (
         <>
-          <h3>✅ ¡Has completado el quiz!</h3>
-          <button className="button-grey" onClick={() => {
-            setMateriaSeleccionada('');
-            setPreguntas([]);
-            setIndice(0);
-            setMostrarResultado(false);
-            setPreguntaActual(null);
-          }}>
-            🔁 Volver a selección de asignatura
-          </button>
+          <h3>¡Quiz finalizado!</h3>
+          <button onClick={onVolver}>⬅ Volver</button>
         </>
       ) : (
-          <ResolverPregunta pregunta={preguntaActual} onSiguiente={avanzar} />
+        <ResolverPregunta
+          pregunta={preguntaActual}
+          onResponder={manejarRespuesta}
+        />
       )}
     </div>
   );
