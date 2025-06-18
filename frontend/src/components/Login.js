@@ -18,6 +18,24 @@ function Login() {
         nombre,
         rol
       });
+      console.log("🧪 Respuesta del backend:", res.data);
+
+      if (res.data?.user) {
+        onLogin(res.data.user);
+      } else {
+        console.warn("⚠️ Respuesta inesperada:", res.data);
+        setError('Credenciales inválidas');
+      }
+    } catch (err) {
+      console.error('❌ Error en login:', err);
+      setError('No se pudo iniciar sesión');
+    }
+  }
+    /*try {
+      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/login`, {
+        nombre,
+        rol
+      });
 
       if (res.data && res.data.user) {
         // Navegación según el rol
@@ -34,7 +52,7 @@ function Login() {
       setError('No se pudo iniciar sesión');
     }
   };
-
+*/
   return (
     <>
       <img src="/edutrack-logo.png" alt="EduTrack" className="logo" />
