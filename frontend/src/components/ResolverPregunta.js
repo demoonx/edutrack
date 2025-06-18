@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function ResolverPregunta({ pregunta, onSiguiente }) {
+function ResolverPregunta({ pregunta, onResponder }) {
   const [respuestaSeleccionada, setRespuestaSeleccionada] = useState(null);
   const [resultado, setResultado] = useState(null);
 
@@ -13,6 +13,11 @@ function ResolverPregunta({ pregunta, onSiguiente }) {
     setRespuestaSeleccionada(opcion);
     const esCorrecta = opcion === pregunta.answer;
     setResultado(esCorrecta ? 'correcta' : 'incorrecta');
+
+    // ✅ Notificar al componente padre si fue correcta
+    if (onResponder) {
+      onResponder(esCorrecta);
+    }
   };
 
   if (!pregunta) return <p>No hay pregunta para mostrar.</p>;
@@ -45,9 +50,6 @@ function ResolverPregunta({ pregunta, onSiguiente }) {
           <p style={{ fontWeight: 'bold', color: resultado === 'correcta' ? 'green' : 'red' }}>
             {resultado === 'correcta' ? '✅ Respuesta correcta' : '❌ Respuesta incorrecta'}
           </p>
-          <button className="button-principal" onClick={onSiguiente}>
-            ➡️ Siguiente pregunta
-          </button>
         </>
       )}
     </div>
