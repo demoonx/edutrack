@@ -19,6 +19,31 @@ router.post('/add-score', async (req, res) => {
   }
 });
 
+// GET: obtener puntaje acumulado por estudiante
+router.get('/puntaje/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const student = await Student.findOne({ email });
+
+    if (!student) {
+      return res.status(404).json({});
+    }
+
+    const plainPuntajes = Object.fromEntries(student.puntajes);
+    res.json(plainPuntajes);
+  } catch (error) {
+    console.error('❌ Error al obtener puntaje:', error);
+    res.status(500).json({ error: 'Error al consultar puntaje del alumno' });
+  }
+});
+
+router.get('/:email', async (req, res) => {
+  const { email } = req.params;
+  const student = await Student.findOne({ email });
+  if (!student) return res.status(404).json({ error: 'No encontrado' });
+  res.json(student);
+});
+
 module.exports = router;
 // This code defines an Express.js route to handle adding scores for students.
 // It expects a POST request with userId, materia, and puntos in the body.

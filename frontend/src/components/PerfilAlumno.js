@@ -11,7 +11,7 @@ function PerfilAlumno({ onVolver }) {
   useEffect(() => {
     if (usuario?.email) {
       console.log("Consultando puntaje para:", usuario.email);
-      axios.get(`${process.env.REACT_APP_API_URL}/api/students/puntaje/${usuario.email}`)
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/students/puntaje/${usuario.email}`)
         .then(res => {
           const data = res.data || {};
           setPuntajes(data);
