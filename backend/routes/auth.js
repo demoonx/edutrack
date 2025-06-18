@@ -39,7 +39,8 @@ router.post("/login", async (req, res) => {
       }
     });
   } catch (err) {
-    console.error("❌ Error en login automático:", err);
+    console.error("❌ Error en login automático:", err.message);
+    console.error(err); // ← importante para ver el stack
     res.status(500).json({ message: "Error en el servidor" });
   }
 });
