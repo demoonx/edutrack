@@ -44,4 +44,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/test", (req, res) => {
+  res.send("✔️ Ruta auth activa");
+});
+
 module.exports = router;

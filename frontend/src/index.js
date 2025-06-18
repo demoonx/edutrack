@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './context/AuthContext';
 
-serviceWorkerRegistration.register();
+serviceWorkerRegistration.unregister();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
