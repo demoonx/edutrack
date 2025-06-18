@@ -22,18 +22,17 @@ router.post('/add-score', async (req, res) => {
 // GET: obtener puntaje acumulado por estudiante
 router.get('/puntaje/:email', async (req, res) => {
   try {
-    const { email } = req.params;
-    const student = await Student.findOne({ email });
+    const email = decodeURIComponent(req.params.email); // muy importante
+    const user = await User.findOne({ email });
 
-    if (!student) {
-      return res.status(404).json({});
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    const plainPuntajes = Object.fromEntries(student.puntajes);
-    res.json(plainPuntajes);
-  } catch (error) {
-    console.error('❌ Error al obtener puntaje:', error);
-    res.status(500).json({ error: 'Error al consultar puntaje del alumno' });
+    res.json(user.puntajes);
+  } catch (err) {
+    console.error("❌ Error en /puntaje/:email:", err);
+    res.status(500).json({ error: "Error al consultar puntaje del alumno" });
   }
 });
 
