@@ -1,7 +1,7 @@
 /* Fondo y centrado general de la app */
 .App {
   min-height: 100vh;
-  background: url('/./frontend/public/fondo.png') center center / cover no-repeat fixed;
+  background: "url('/fondo.png') center center / cover no-repeat fixed";
   display: flex;
   align-items: center;
   justify-content: center;
