@@ -1,7 +1,6 @@
 /* Fondo y centrado general de la app */
 .App {
   min-height: 100vh;
-  background: "url('/fondo.png') center center / cover no-repeat fixed";
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,6 +9,7 @@
 /* Contenedor principal para cada pantalla completa */
 .page-wrapper {
   background-color: rgba(255, 255, 255, 0.96);
+  background: url('/fondo.png') center center / cover no-repeat fixed;
   padding: 40px;
   border-radius: 14px;
   max-width: 600px;
