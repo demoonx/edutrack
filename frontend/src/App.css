@@ -1,6 +1,9 @@
 /* Fondo y centrado general de la app */
 .App {
   background-image: url('./assets/fondo.png'); /* La ruta debe ser relativa al src */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -9,6 +12,7 @@
 
 /* Contenedor principal para cada pantalla completa */
 .page-wrapper {
+  background-color: white;
   padding: 40px;
   border-radius: 14px;
   max-width: 600px;
