@@ -1,37 +1,35 @@
+/* Fondo y centrado general de la app */
 .App {
   background-image: url('./assets/fondo.png'); /* La ruta debe ser relativa al src */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Contenedor principal para cada pantalla completa */
 .page-wrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.container {
-  background-color: rgba(255, 255, 255, 0.96);
   padding: 40px;
   border-radius: 14px;
   max-width: 600px;
   width: 90%;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin: auto;
 }
 
+/* Contenedor secundario dentro de los paneles (sin márgenes grandes) */
+.container {
+  text-align: center;
+  padding-top: 20px;
+}
+
+/* Logo */
 .logo {
   width: 100px;
   margin-bottom: 25px;
 }
 
+/* Inputs y selects */
 input,
 select {
   width: 100%;
@@ -42,6 +40,7 @@ select {
   font-size: 15px;
 }
 
+/* Botón principal */
 .button-principal {
   background-color: #007bff;
   color: white;
@@ -60,6 +59,7 @@ select {
   background-color: #0056b3;
 }
 
+/* Botón gris (secundario) */
 .button-grey {
   background-color: #e0e0e0;
   color: #333;
