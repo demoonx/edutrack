@@ -133,3 +133,9 @@ Para consultas o soporte técnico, contacta a:
 Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo `LICENSE` para más información.
 
 ---
+
+## Enlace Directo 
+
+* **Prueba EduTrack** [https://edutrack-frontend-rib2.onrender.com]
+
+---
