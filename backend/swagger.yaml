@@ -1,0 +1,521 @@
+# studentController.yaml
+openapi: 3.0.0
+paths:
+  /students/add-score:
+    post:
+      summary: Sumar puntaje a un usuario
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: ID del usuario (MongoDB ObjectId)
+                  example: "60d21b4667d0d8992e610c85"
+                materia:
+                  type: string
+                  description: Nombre de la materia
+                  example: "matematicas"
+                puntos:
+                  type: number
+                  description: Puntos a sumar
+                  example: 5
+      responses:
+        '200':
+          description: Puntaje actualizado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  puntajes:
+                    type: object
+        '400':
+          description: Materia inválida
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /students/puntaje/{email}:
+    get:
+      summary: Obtener puntaje acumulado de un usuario por email
+      tags:
+        - Students
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: Email del usuario (URL encoded)
+      responses:
+        '200':
+          description: Puntajes del usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+# models/Question.yaml
+components:
+  schemas:
+    Question:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID único de la pregunta (MongoDB ObjectId)
+          example: "60d21b4667d0d8992e610c85"
+        subject:
+          type: string
+          description: Tema o materia de la pregunta
+          example: "matematicas"
+        question:
+          type: string
+          description: Texto de la pregunta
+          example: "¿Cuánto es 2 + 2?"
+        options:
+          type: array
+          description: Opciones de respuesta (mínimo 2)
+          items:
+            type: string
+          example: ["2", "3", "4", "5"]
+        answer:
+          type: string
+          description: Respuesta correcta
+          example: "4"
+        createdBy:
+          type: string
+          description: ID del usuario que creó la pregunta
+          example: "60d21b4667d0d8992e610c99"
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha de creación
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+      required:
+        - subject
+        - question
+        - options
+        - answer
+
+# models/Student.yaml
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID único del estudiante (MongoDB ObjectId)
+          example: "60d21b4667d0d8992e610c85"
+        email:
+          type: string
+          description: Correo electrónico del estudiante
+          example: "alumno@ejemplo.com"
+        puntajes:
+          type: object
+          additionalProperties:
+            type: number
+          description: Puntajes acumulados por materia (clave = materia, valor = puntaje)
+          example: { "matematicas": 10, "historia": 7 }
+      required:
+        - email
+        - puntajes
+
+# models/User.yaml
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID único del usuario (MongoDB ObjectId)
+          example: "60d21b4667d0d8992e610c85"
+        email:
+          type: string
+          description: Correo electrónico del usuario
+          example: "usuario@ejemplo.com"
+        role:
+          type: string
+          enum: [profesor, estudiante]
+          description: Rol del usuario
+          example: "estudiante"
+        nombre:
+          type: string
+          description: Nombre del usuario
+          example: "Juan Pérez"
+        puntajes:
+          type: object
+          properties:
+            Biología:
+              type: number
+              example: 8
+            Historia:
+              type: number
+              example: 10
+            Matemáticas:
+              type: number
+              example: 7
+            Física:
+              type: number
+              example: 9
+            Lenguaje:
+              type: number
+              example: 6
+            Inglés:
+              type: number
+              example: 10
+          description: Puntajes por materia
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha de creación
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha de última actualización
+      required:
+        - email
+        - role
+        - puntajes
+
+#routes/auth.yaml
+paths:
+  /auth/login:
+    post:
+      summary: Login automático o registro de usuario
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del usuario
+                  example: "Juan"
+                rol:
+                  type: string
+                  description: Rol del usuario ("profesor" o "estudiante")
+                  enum: [profesor, estudiante]
+                  example: "estudiante"
+      responses:
+        '200':
+          description: Usuario autenticado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT de autenticación
+                  user:
+                    $ref: '#/components/schemas/User'
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error en el servidor"
+
+  /auth/test:
+    get:
+      summary: Prueba de ruta de autenticación
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Ruta activa
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "✔️ Ruta auth activa"
+
+# routes/questions.yaml
+paths:
+  /questions:
+    get:
+      summary: Obtener todas las preguntas o filtrar por materia
+      tags:
+        - Questions
+      parameters:
+        - in: query
+          name: subject
+          schema:
+            type: string
+          description: Filtrar preguntas por materia (subject)
+      responses:
+        '200':
+          description: Lista de preguntas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
+        '500':
+          description: Error al obtener preguntas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    post:
+      summary: Crear nueva pregunta
+      tags:
+        - Questions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        '201':
+          description: Pregunta creada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '500':
+          description: Error al crear pregunta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /questions/{id}:
+    put:
+      summary: Editar pregunta existente
+      tags:
+        - Questions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID de la pregunta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses:
+        '200':
+          description: Pregunta actualizada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '500':
+          description: Error al actualizar pregunta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    delete:
+      summary: Eliminar pregunta existente
+      tags:
+        - Questions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID de la pregunta
+      responses:
+        '204':
+          description: Pregunta eliminada correctamente (sin contenido)
+        '500':
+          description: Error al eliminar pregunta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+# routes/students.yaml
+paths:
+  /students/puntaje:
+    post:
+      summary: Sumar puntaje por materia a un estudiante
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Correo electrónico del estudiante
+                  example: "alumno@ejemplo.com"
+                materia:
+                  type: string
+                  description: Nombre de la materia
+                  example: "matematicas"
+                puntos:
+                  type: number
+                  description: Puntos a sumar
+                  example: 5
+      responses:
+        '200':
+          description: Puntaje registrado correctamente
+        '500':
+          description: Error al registrar puntaje
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /students/puntaje/{email}:
+    get:
+      summary: Obtener puntaje acumulado por estudiante
+      tags:
+        - Students
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: Correo electrónico del estudiante
+      responses:
+        '200':
+          description: Puntajes del estudiante por materia
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: number
+                example:
+                  matematicas: 10
+                  historia: 7
+        '404':
+          description: Estudiante no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Error al consultar puntaje
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /students/{email}:
+    get:
+      summary: Obtener información completa de un estudiante por email
+      tags:
+        - Students
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+          description: Correo electrónico del estudiante
+      responses:
+        '200':
+          description: Información del estudiante
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '404':
+          description: Estudiante no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "No encontrado"
