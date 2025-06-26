@@ -1,5 +1,3 @@
-Aquí tienes un archivo README completo y profesional para el proyecto EduTrack:
-
 ---
 
 # EduTrack
